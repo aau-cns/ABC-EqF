@@ -1,6 +1,6 @@
 # ABC EqF: Attitude Biase and Calibration states Equivariant Filter
 
-[![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0-informational](https://www.gnu.org/licenses/gpl-3.0)
+[![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0-informational](./LICENSE)
 
 Maintainer: [Alessandro Fornasier](mailto:alessandro.fornasier@aau.at)
 
@@ -16,19 +16,6 @@ This code was written by the [Control of Networked System (CNS)](https://www.aau
 If you use this software in an academic research setting, please cite the
 corresponding paper and consult the `LICENSE` file for a detailed explanation.
 
-#```latex
-#@article{Fornasier2022ABCEqF,
-#    title        = {Overcoming Bias: Equivariant Filter Design for Biased Attitude Estimation with Online Calibration},
-#    author       = {Fornasier, Alessandro and Ng, Yonhon and Brommer, Christian and Böhm, Christoph and Mahony, Robert and Weiss, Stephan},
-#    journal      = {IEEE Robotics and Automation Letters},
-#    volume       = {},
-#    number       = {},
-#    year         = {2022},
-#    doi          = {},
-#    url          = {},
-#    pages        = {}
-#}
-#```
 ```latex
 @article{Fornasier2022ABCEqF,
     title        = {Overcoming Bias: Equivariant Filter Design for Biased Attitude Estimation with Online Calibration},
