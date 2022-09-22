@@ -1,6 +1,6 @@
 # ABC EqF: Attitude Biase and Calibration states Equivariant Filter
 
-[![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0-informational](./LICENSE)
+[![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-informational)](./LICENSE)
 
 Maintainer: [Alessandro Fornasier](mailto:alessandro.fornasier@aau.at)
 
