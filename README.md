@@ -17,12 +17,15 @@ If you use this software in an academic research setting, please cite the
 corresponding paper and consult the `LICENSE` file for a detailed explanation.
 
 ```latex
-@article{Fornasier2022ABCEqF,
-    title        = {Overcoming Bias: Equivariant Filter Design for Biased Attitude Estimation with Online Calibration},
-    author       = {Fornasier, Alessandro and Ng, Yonhon and Brommer, Christian and Böhm, Christoph and Mahony, Robert and Weiss, Stephan},
-    journal      = {IEEE Robotics and Automation Letters},
-    year         = {2022},
-}
+@ARTICLE{9905914,
+  author={Fornasier, Alessandro and Ng, Yonhon and Brommer, Christian and Böhm, Christoph and Mahony, Robert and Weiss, Stephan},
+  journal={IEEE Robotics and Automation Letters}, 
+  title={Overcoming Bias: Equivariant Filter Design for Biased Attitude Estimation With Online Calibration}, 
+  year={2022},
+  volume={7},
+  number={4},
+  pages={12118-12125},
+  doi={10.1109/LRA.2022.3210867}}
 ```
 
 ## Description
