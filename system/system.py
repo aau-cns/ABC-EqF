@@ -224,7 +224,7 @@ class Measurement:
     cal_idx is a index corresponding to the cal_idx-th calibration related to the measurement. Let's consider the case
     of 2 uncalibrated sensor with two associated calibration state in State.S = [S0, S1], and a single calibrated sensor.
     cal_idx = 0 indicates a measurement coming from the sensor that has calibration S0, cal_idx = 1 indicates a
-    measurement coming from the sensor that has calibration S1. v = -1 indicates that the measurement is coming
+    measurement coming from the sensor that has calibration S1. cal_idx = -1 indicates that the measurement is coming
     from a calibrated sensor
     ----------
     """
