@@ -1,0 +1,18 @@
+<launch>
+    <node pkg="ABC_EqF" type="ABC_EqF_inertial_node.py" name="ABCEqF" output="screen">
+
+        <!-- Input measurement parameters -->
+	    <param name="gyro_topic"			                value="fcu/imu"/>
+        <param name="gyro_measurement_standard_deviation"   value="0.013"/>
+        <param name="gyro_bias_standard_deviation"          value="0.0013"/>
+
+        <!-- Output measurement parameters -->
+	    <param name="acc_topic"				                value="fcu/imu"/>
+        <param name="acc_measurement_standard_deviation"    value="0.1"/>
+	    <param name="norm_threshold"			            value="0.2"/>
+
+        <!-- Initial standard deviation -->
+        <param name="initial_standard_deviation"	        value="1.0" />
+
+    </node>
+</launch>
