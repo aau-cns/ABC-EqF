@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""ROS1 Wrapper"""
+"""Generic ROS1 Wrapper"""
 
 __author__ = "Alessandro Fornasier"
 __copyright__ = "Copyright (C) 2022 Alessandro Fornasier"
@@ -66,11 +66,12 @@ class ABCEqFROSWrapper:
         # Input measurement #
         #####################
 
+        gyro_topic = rospy.get_param("~gyro_topic")
         gyro_meas_std = rospy.get_param("~gyro_measurement_standard_deviation")
         gyro_bias_std = rospy.get_param("~gyro_bias_standard_deviation")
         self.__input_Sigma = blockDiag((gyro_meas_std ** 2) * np.eye(3), (gyro_bias_std ** 2) * np.eye(3))
 
-        rospy.Subscriber("gyro", Imu, self.callback_gyro)
+        rospy.Subscriber(gyro_topic, Imu, self.callback_gyro)
 
         #######################
         # Output Measurements #
@@ -157,7 +158,7 @@ class ABCEqFROSWrapper:
             try:
                 self.__eqf.propagation(self.__gyro_buffer.get(0)["u"], dt)
                 self.__publish_attitude__(t)
-            finally:
+            except:
                 print('EqF propagation Error\n')
 
 
@@ -181,7 +182,7 @@ class ABCEqFROSWrapper:
         try:
             self.__eqf.update(Measurement(y, d, R, -1))
             self.__publish_attitude__(t)
-        finally:
+        except:
             print('EqF update Error\n')
 
 
@@ -201,7 +202,7 @@ class ABCEqFROSWrapper:
         try:
             self.__eqf.update(Measurement(y, d, R, args["id"]))
             self.__publish_attitude__(t)
-        finally:
+        except:
             print('EqF update Error\n')
 
 
@@ -220,5 +221,5 @@ class ABCEqFROSWrapper:
 
 if __name__ == "__main__":
     rospy.init_node("ABC_EqF")
-    motor_driver_wrapper = ABCEqFROSWrapper()
+    wrapper = ABCEqFROSWrapper()
     rospy.spin()
