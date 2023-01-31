@@ -235,3 +235,9 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 .todo
+
+# ROS
+**/build
+**/devel
+**/.catkin_tools
+**/logs
