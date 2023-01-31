@@ -205,13 +205,13 @@ def sim(filter_args, data):
         # Run filter
         try:
             filter.propagation(d.u, d.dt)
-        finally:
+        except:
             print('Filter.propagation Error\n')
         for y in d.y:
             if not (np.isnan(np.linalg.norm(y.y.d)) or np.isnan(np.linalg.norm(y.d.d))):
                 try:
                     filter.update(y)
-                finally:
+                except:
                     print('Filter.update Error\n')
         est.append(filter.stateEstimate())
 
