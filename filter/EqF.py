@@ -2,6 +2,7 @@
 
 """Implementation of Attitude-Bias-Calibration EqF form:
 "Overcoming Bias: Equivariant Filter Design for Biased Attitude Estimation with Online Calibration"
+https://ieeexplore.ieee.org/document/9905914
 """
 
 __author__ = "Alessandro Fornasier"
@@ -108,14 +109,14 @@ class EqF:
         # Cross-check calibration
         assert (y.cal_idx <= self.__n_cal)
 
-        Ct = self.__measurementMatrixC(y.d, y.cal_idx)                      # Equation 14b
-        delta = outputAction(self.__X_hat.inv(), y.y, y.cal_idx)
+        Ct = self.__measurementMatrixC(y.d, y.cal_idx)                              # Equation 14b
+        delta = SO3.wedge(d.d) @ outputAction(self.__X_hat.inv(), y.y, y.cal_idx)
         Dt = self.__outputMatrixDt(y.cal_idx)
-        S = Ct @ self.__Sigma @ Ct.T + Dt @ y.Sigma @ Dt.T                  # Equation 21
-        K = self.__Sigma @ Ct.T @ np.linalg.inv(S)                          # Equation 22
-        Delta = self.__InnovationLift @ K @ delta                           # Equation 23
-        self.__X_hat = G.exp(Delta) * self.__X_hat                          # Equation 24
-        self.__Sigma = (np.eye(self.__dof) - K @ Ct) @ self.__Sigma         # Equation 25
+        S = Ct @ self.__Sigma @ Ct.T + Dt @ y.Sigma @ Dt.T                          # Equation 21
+        K = self.__Sigma @ Ct.T @ np.linalg.inv(S)                                  # Equation 22
+        Delta = self.__InnovationLift @ K @ delta                                   # Equation 23
+        self.__X_hat = G.exp(Delta) * self.__X_hat                                  # Equation 24
+        self.__Sigma = (np.eye(self.__dof) - K @ Ct) @ self.__Sigma                 # Equation 25
 
     def __stateMatrixA(self, u: Input) -> np.ndarray:
         """Return the state matrix A0t (Equation 14a)
@@ -195,7 +196,7 @@ class EqF:
         if idx >= 0:
             Cc[(3 * idx):(3 + 3 * idx), :] = SO3.wedge(d.d)
 
-        return np.hstack((SO3.wedge(d.d), np.zeros((3, 3)), Cc))
+        return SO3.wedge(d.d) @ np.hstack((SO3.wedge(d.d), np.zeros((3, 3)), Cc))
 
     def __outputMatrixDt(self, idx: int) -> np.ndarray:
         """Return the measurement output matrix Dt

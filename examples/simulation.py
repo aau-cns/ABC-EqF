@@ -39,6 +39,7 @@ from utils.utils import *
 # Argument parser
 parser = argparse.ArgumentParser("Load dataset(s) for Attitude Bias and Calibration EqF.")
 parser.add_argument("data_path", metavar='m', help="The dataset file name or the folder name.")
+parser.add_argument("--num-threads", type=int, default=1, help="number of threads for NumPy to use")
 args = parser.parse_args()
 
 @dataclass
