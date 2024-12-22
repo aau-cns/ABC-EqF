@@ -40,6 +40,7 @@ from utils.utils import *
 parser = argparse.ArgumentParser("Load dataset(s) for Attitude Bias and Calibration EqF.")
 parser.add_argument("data_path", metavar='m', help="The dataset file name or the folder name.")
 parser.add_argument("--num-threads", type=int, default=1, help="number of threads for NumPy to use")
+parser.add_argument("--show", action='store_true', help="Set to show the plots instead of directly saving them")
 args = parser.parse_args()
 
 @dataclass
@@ -226,8 +227,10 @@ def sim(filter_args, data):
     ax0.set_title("Attitude: Roll")
     ax1.set_title("Attitude: Pitch")
     ax2.set_title("Attitude: Yaw")
-    # plt.show()
-    plt.savefig('attitude.png')
+    if args.show:
+        plt.show()
+    else:
+        plt.savefig('attitude.png')
 
     # Plot bias
     fig, (ax0, ax1, ax2) = plt.subplots(3, 1)
@@ -239,8 +242,10 @@ def sim(filter_args, data):
     ax0.set_title("Bias: x")
     ax1.set_title("Bias: y")
     ax2.set_title("Bias: z")
-    # plt.show()
-    plt.savefig('bias.png')
+    if args.show:
+        plt.show()
+    else:
+        plt.savefig('bias.png')
 
     # Plot calibration states
     for j in range(data[0].n_cal):
@@ -253,8 +258,10 @@ def sim(filter_args, data):
         ax0.set_title("Calibration: Roll")
         ax1.set_title("Calibration: Pitch")
         ax2.set_title("Calibration: Yaw")
-        # plt.show()
-        plt.savefig('calibration.png')
+        if args.show:
+            plt.show()
+        else:
+            plt.savefig('calibration.png')
 
 
 if __name__ == '__main__':
