@@ -37,5 +37,16 @@ corresponding paper and consult the `LICENSE` file for a detailed explanation.
 
 ## Run the example
 
-`python3 examples/simulation.py examples/data.csv --show`
+```commandline
+python3 examples/simulation.py examples/data.csv --show
+```
+
+## Run the example in docker
+
+```commandline
+docker build --network=host -t abc_eqf -f docker/Dockerfile .
+docker run -it --rm --network=host -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v <path_of_your_choice>:/home/ubuntu/ABC-EqF/examples/results abc_eqf
+cd ABC-EqF/examples
+python3 simulation.py data.csv
+```
 

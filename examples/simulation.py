@@ -25,6 +25,7 @@ from pylie import SO3
 import progressbar
 import pandas as pd
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 # Update path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -217,6 +218,9 @@ def sim(filter_args, data):
                     print('Filter.update Error\n')
         est.append(filter.stateEstimate())
 
+    respath = os.path.dirname(os.path.abspath(__file__)) + '/results'
+    Path(respath).mkdir(parents=True, exist_ok=True)
+
     # Plot Attitude
     fig, (ax0, ax1, ax2) = plt.subplots(3, 1)
     ax = [ax0, ax1, ax2]
@@ -230,7 +234,7 @@ def sim(filter_args, data):
     if args.show:
         plt.show()
     else:
-        plt.savefig('attitude.png')
+        plt.savefig(respath + '/attitude.png')
 
     # Plot bias
     fig, (ax0, ax1, ax2) = plt.subplots(3, 1)
@@ -245,7 +249,7 @@ def sim(filter_args, data):
     if args.show:
         plt.show()
     else:
-        plt.savefig('bias.png')
+        plt.savefig(respath + '/bias.png')
 
     # Plot calibration states
     for j in range(data[0].n_cal):
@@ -261,7 +265,7 @@ def sim(filter_args, data):
         if args.show:
             plt.show()
         else:
-            plt.savefig('calibration.png')
+            plt.savefig(respath + '/calibration.png')
 
 
 if __name__ == '__main__':
