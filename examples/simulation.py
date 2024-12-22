@@ -153,7 +153,7 @@ def readCSV(pname):
         if bias_exist:
             b = np.array([float(row['b_x']), float(row['b_y']), float(row['b_z'])]).reshape((3, 1))
         else:
-            b = np.zeros((3, 1))
+            b = np.zeros(3)
 
         # Load GNSS calibration
         S = []
