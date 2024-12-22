@@ -50,3 +50,4 @@ cd ABC-EqF/examples
 python3 simulation.py data.csv
 ```
 
+The resulting plots will be saved in `<path_of_your_choice>`
