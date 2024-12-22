@@ -32,11 +32,11 @@ def lift(xi: State, u: Input) -> np.ndarray:
     """
 
     n = len(xi.S)
-    L = np.zeros(((6 + 3 * n), 1))
-    L[0:3, :] = (u.w - xi.b)
-    L[3:6, :] = -u.W() @ xi.b
+    L = np.zeros(6 + 3 * n)
+    L[0:3] = (u.w - xi.b)
+    L[3:6] = -u.W() @ xi.b
     for i in range(n):
-        L[(6 + 3 * i):(9 + 3 * i), :] = xi.S[i].inv().as_matrix() @ L[0:3, :]
+        L[(6 + 3 * i):(9 + 3 * i)] = xi.S[i].inv().as_matrix() @ L[0:3]
 
     return L
 
