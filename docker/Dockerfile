@@ -2,6 +2,8 @@ FROM ubuntu:22.04
 
 SHELL ["/bin/bash", "-c"]
 
+ENV DISPLAY=:0
+
 RUN apt update && apt upgrade
 RUN apt install -y python3
 RUN apt install -y pip
@@ -18,6 +20,7 @@ RUN python3 -m pip install --upgrade build
 RUN python3 -m pip install --upgrade matplotlib
 RUN python3 -m pip install --upgrade progressbar
 RUN python3 -m pip install --upgrade pandas
+RUN python3 -m pip install --upgrade PyQt5
 RUN git clone https://github.com/pvangoor/pylie.git
 RUN git clone https://github.com/aau-cns/ABC-EqF.git
 
