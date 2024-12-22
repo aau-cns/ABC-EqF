@@ -33,5 +33,9 @@ corresponding paper and consult the `LICENSE` file for a detailed explanation.
 
 ## Requirements
 
-* [pylie](https://github.com/pvangoor/pylie)
+* [pylie](https://github.com/pvangoor/pylie) (latest commit tested: 65922fc)
+
+## Run the example
+
+`python3 examples/simulation.py examples/data.csv --show`
 
