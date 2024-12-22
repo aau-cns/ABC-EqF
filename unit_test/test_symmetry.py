@@ -38,8 +38,11 @@ class TestSymmetry(unittest.TestCase):
     def assertMatricesEqual(self, M1: np.ndarray, M2: np.ndarray):
         assert (M1.shape == M2.shape)
         for i in range(M1.shape[0]):
-            for j in range(M1.shape[1]):
-                self.assertAlmostEqual(M1[i, j], M2[i, j])
+            if len(M1.shape) > 1:
+                for j in range(M1.shape[1]):
+                    self.assertAlmostEqual(M1[i, j], M2[i, j])
+            else:
+                self.assertAlmostEqual(M1[i], M2[i])
 
     def assertListOfMatricesEqual(self, L1: list, L2: list):
         assert (len(L1) == len(L2))
@@ -64,7 +67,7 @@ class TestSymmetry(unittest.TestCase):
     def testG(self):
         self.assertRaises(TypeError, G, np.eye(3))
         self.assertRaises(TypeError, G, SO3.identity(), [1, 2, 3])
-        self.assertRaises(TypeError, G, SO3.identity(), np.zeros((3, 1)))
+        self.assertRaises(TypeError, G, SO3.identity(), np.zeros(3))
         self.assertRaises(TypeError, G, SO3.identity(), np.zeros((3, 3)), [1, 2, 3])
 
     def test_associative(self):
