@@ -25,7 +25,6 @@ from pylie import SO3
 import progressbar
 import pandas as pd
 import matplotlib.pyplot as plt
-import pdb
 
 # Update path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -227,7 +226,8 @@ def sim(filter_args, data):
     ax0.set_title("Attitude: Roll")
     ax1.set_title("Attitude: Pitch")
     ax2.set_title("Attitude: Yaw")
-    plt.show()
+    # plt.show()
+    plt.savefig('attitude.png')
 
     # Plot bias
     fig, (ax0, ax1, ax2) = plt.subplots(3, 1)
@@ -239,7 +239,8 @@ def sim(filter_args, data):
     ax0.set_title("Bias: x")
     ax1.set_title("Bias: y")
     ax2.set_title("Bias: z")
-    plt.show()
+    # plt.show()
+    plt.savefig('bias.png')
 
     # Plot calibration states
     for j in range(data[0].n_cal):
@@ -252,7 +253,8 @@ def sim(filter_args, data):
         ax0.set_title("Calibration: Roll")
         ax1.set_title("Calibration: Pitch")
         ax2.set_title("Calibration: Yaw")
-        plt.show()
+        # plt.show()
+        plt.savefig('calibration.png')
 
 
 if __name__ == '__main__':

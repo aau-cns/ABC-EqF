@@ -110,7 +110,7 @@ class EqF:
         assert (y.cal_idx <= self.__n_cal)
 
         Ct = self.__measurementMatrixC(y.d, y.cal_idx)                              # Equation 14b
-        delta = SO3.wedge(d.d) @ outputAction(self.__X_hat.inv(), y.y, y.cal_idx)
+        delta = SO3.wedge(y.d.d) @ outputAction(self.__X_hat.inv(), y.y, y.cal_idx)
         Dt = self.__outputMatrixDt(y.cal_idx)
         S = Ct @ self.__Sigma @ Ct.T + Dt @ y.Sigma @ Dt.T                          # Equation 21
         K = self.__Sigma @ Ct.T @ np.linalg.inv(S)                                  # Equation 22
