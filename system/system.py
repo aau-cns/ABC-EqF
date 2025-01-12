@@ -31,11 +31,11 @@ class Direction:
     def __init__(self, d: np.ndarray):
         """Initialize direction
 
-        :param d: A numpy array with shape (3, 1) and norm 1 representing the direction
+        :param d: A numpy array with size 3 and norm 1 representing the direction
         """
 
-        if not (isinstance(d, np.ndarray) and d.shape == (3, 1) and checkNorm(d)):
-            raise TypeError("Direction has to be provided as a (3, 1) vector")
+        if not (isinstance(d, np.ndarray) and d.size == 3 and checkNorm(d)):
+            raise TypeError("Direction has to be provided as a 3 vector")
         self.d = d
 
 
@@ -62,11 +62,11 @@ class State:
     # Sensor calibrations S
     S:  List[SO3]
 
-    def __init__(self, R : SO3 = SO3.identity(), b : np.ndarray = np.zeros((3, 1)), S: List[SO3] = None):
+    def __init__(self, R : SO3 = SO3.identity(), b : np.ndarray = np.zeros(3), S: List[SO3] = None):
         """Initialize State
 
         :param R: A SO3 element representing the attitude of the system as a rotation matrix
-        :param b: A numpy array with shape (3, 1) representing the gyroscope bias
+        :param b: A numpy array with size 3 representing the gyroscope bias
         :param S: A list of SO3 elements representing the calibration states for "uncalibrated" sensors,
         if no sensor require a calibration state, than S will be initialized as an empty list
         """
@@ -75,8 +75,8 @@ class State:
             raise TypeError("the attitude rotation matrix R has to be of type SO3")
         self.R = R
 
-        if not (isinstance(b, np.ndarray) and b.shape == (3, 1)):
-            raise TypeError("The gyroscope bias has to be probvided as numpy array with shape (3, 1)")
+        if not (isinstance(b, np.ndarray) and b.size == 3):
+            raise TypeError("The gyroscope bias has to be probvided as numpy array with size 3")
         self.b = b
 
         if S is None:
@@ -98,7 +98,7 @@ class State:
         """
 
         return State(SO3.identity(),
-                     np.zeros((3, 1)),
+                     np.zeros(3),
                      [SO3.identity() for _ in range(n)])
 
     @staticmethod
@@ -109,9 +109,9 @@ class State:
         :return: A random element of the State
         """
 
-        return State(SO3.exp(np.random.randn(3, 1)),
-                     np.random.randn(3, 1),
-                     [SO3.exp(np.random.randn(3, 1)) for _ in range(n)])
+        return State(SO3.exp(np.random.randn(3)),
+                     np.random.randn(3),
+                     [SO3.exp(np.random.randn(3)) for _ in range(n)])
 
     def as_dict(self) -> dict:
         """Return the State as dictionary
@@ -123,7 +123,7 @@ class State:
 
 
 # class System:
-#     """Define the iased Attitude System
+#     """Define the biased Attitude System
 #     ----------
 #     d is a list of directions known to the system
 #     state is the state of the system
@@ -186,13 +186,13 @@ class Input:
     def __init__(self, w: np.ndarray, Sigma: np.ndarray):
         """Initialize Input
 
-        :param w: A numpy array with shape (3, 1) representing the angular velocity measurement from a gyroscope
+        :param w: A numpy array with size 3 representing the angular velocity measurement from a gyroscope
         :param Sigma: A numpy array with shape (6, 6) representing the noise covariance of the
         angular velocity measurement and gyro bias random walk
         """
 
-        if not (isinstance(w, np.ndarray) and w.shape == (3, 1)):
-            raise TypeError("Angular velocity has to be provided as a numpy array with shape (3, 1)")
+        if not (isinstance(w, np.ndarray) and w.size == 3):
+            raise TypeError("Angular velocity has to be provided as a numpy array with size 3")
         if not (isinstance(Sigma, np.ndarray) and Sigma.shape[0] == Sigma.shape[1] == 6):
             raise TypeError("Input measurement noise covariance has to be provided as a numpy array with shape (6. 6)")
         if not np.all(np.linalg.eigvals(Sigma) >= 0):
@@ -208,7 +208,7 @@ class Input:
         :return: A random angular velocity as a Input element
         """
 
-        return Input(np.random.randn(3, 1), np.eye(6))
+        return Input(np.random.randn(3), np.eye(6))
 
     def W(self) -> np.ndarray:
         """Return the Input as a skew-symmetric matrix
@@ -244,15 +244,15 @@ class Measurement:
     def __init__(self, y: np.ndarray, d: np.ndarray, Sigma: np.ndarray, i: int = -1):
         """Initialize measurement
 
-        :param y: A numpy array with shape (3, 1) and norm 1 representing the direction measurement in the sensor frame
-        :param d: A numpy array with shape (3, 1) and norm 1 representing the direction in the global frame
+        :param y: A numpy array with size 3 and norm 1 representing the direction measurement in the sensor frame
+        :param d: A numpy array with size 3 and norm 1 representing the direction in the global frame
         :param Sigma: A numpy array with shape (3, 3) representing the noise covariance of the direction measurement
         :param i: index of the corresponding calibration state
         """
 
-        if not (isinstance(y, np.ndarray) and y.shape == (3, 1) and checkNorm(y)):
+        if not (isinstance(y, np.ndarray) and y.size == 3 and checkNorm(y)):
             raise TypeError("Measurement has to be provided as a (3, 1) vector")
-        if not (isinstance(d, np.ndarray) and d.shape == (3, 1) and checkNorm(d)):
+        if not (isinstance(d, np.ndarray) and d.size == 3 and checkNorm(d)):
             raise TypeError("Direction has to be provided as a (3, 1) vector")
         if not (isinstance(Sigma, np.ndarray) and Sigma.shape[0] == Sigma.shape[1] == 3):
             raise TypeError("Direction measurement noise covariance has to be provided as a numpy array with shape (3. 3)")

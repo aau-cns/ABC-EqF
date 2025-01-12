@@ -33,5 +33,21 @@ corresponding paper and consult the `LICENSE` file for a detailed explanation.
 
 ## Requirements
 
-* [pylie](https://github.com/pvangoor/pylie)
+* [pylie](https://github.com/pvangoor/pylie) (latest commit tested: 65922fc)
 
+## Run the example
+
+```commandline
+python3 examples/simulation.py examples/data.csv --show
+```
+
+## Run the example in docker
+
+```commandline
+docker build --network=host -t abc_eqf -f docker/Dockerfile .
+docker run -it --rm --network=host -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v <path_of_your_choice>:/home/ubuntu/ABC-EqF/examples/results abc_eqf
+cd ABC-EqF/examples
+python3 simulation.py data.csv
+```
+
+The resulting plots will be saved in `<path_of_your_choice>`

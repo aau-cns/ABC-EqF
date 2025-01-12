@@ -25,6 +25,7 @@ from pylie import SO3
 import progressbar
 import pandas as pd
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 # Update path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -40,6 +41,7 @@ from utils.utils import *
 parser = argparse.ArgumentParser("Load dataset(s) for Attitude Bias and Calibration EqF.")
 parser.add_argument("data_path", metavar='m', help="The dataset file name or the folder name.")
 parser.add_argument("--num-threads", type=int, default=1, help="number of threads for NumPy to use")
+parser.add_argument("--show", action='store_true', help="Set to show the plots instead of directly saving them")
 args = parser.parse_args()
 
 @dataclass
@@ -151,9 +153,9 @@ def readCSV(pname):
 
         # Load Gyro biases
         if bias_exist:
-            b = np.array([float(row['b_x']), float(row['b_y']), float(row['b_z'])]).reshape((3, 1))
+            b = np.array([float(row['b_x']), float(row['b_y']), float(row['b_z'])]).reshape(3,)
         else:
-            b = np.zeros((3, 1))
+            b = np.zeros(3)
 
         # Load GNSS calibration
         S = []
@@ -163,17 +165,17 @@ def readCSV(pname):
                 S.append(SO3.from_matrix(Rotation.from_quat(cal).as_matrix()))
 
         # Load Gyro inputs
-        w = np.array([float(row['w_x']), float(row['w_y']), float(row['w_z'])]).reshape((3, 1))
-        std_w = np.array([float(row['std_w_x']), float(row['std_w_y']), float(row['std_w_z'])]).reshape((3, 1))
-        std_b = np.array([float(row['std_b_x']), float(row['std_b_y']), float(row['std_b_z'])]).reshape((3, 1))
+        w = np.array([float(row['w_x']), float(row['w_y']), float(row['w_z'])]).reshape(3,)
+        std_w = np.array([float(row['std_w_x']), float(row['std_w_y']), float(row['std_w_z'])]).reshape(3,)
+        std_b = np.array([float(row['std_b_x']), float(row['std_b_y']), float(row['std_b_z'])]).reshape(3,)
         Sigma_wb = blockDiag(np.eye(3) * (std_w ** 2), np.eye(3) * (std_b ** 2))
 
         # Load measurements
         meas = []
         for i in range(n_meas):
-            y = np.array([float(row['y_x_' + str(i)]), float(row['y_y_' + str(i)]), float(row['y_z_' + str(i)])]).reshape((3, 1))
-            d = np.array([float(row['d_x_' + str(i)]), float(row['d_y_' + str(i)]), float(row['d_z_' + str(i)])]).reshape((3, 1))
-            std_y = np.array([float(row['std_y_x_' + str(i)]), float(row['std_y_y_' + str(i)]), float(row['std_y_z_' + str(i)])]).reshape((3, 1))
+            y = np.array([float(row['y_x_' + str(i)]), float(row['y_y_' + str(i)]), float(row['y_z_' + str(i)])]).reshape(3,)
+            d = np.array([float(row['d_x_' + str(i)]), float(row['d_y_' + str(i)]), float(row['d_z_' + str(i)])]).reshape(3,)
+            std_y = np.array([float(row['std_y_x_' + str(i)]), float(row['std_y_y_' + str(i)]), float(row['std_y_z_' + str(i)])]).reshape(3,)
             if i < n_cal:
                 meas.append(Measurement(y, d, np.eye(3) * (std_y ** 2), i))
             else:
@@ -216,6 +218,9 @@ def sim(filter_args, data):
                     print('Filter.update Error\n')
         est.append(filter.stateEstimate())
 
+    respath = os.path.dirname(os.path.abspath(__file__)) + '/results'
+    Path(respath).mkdir(parents=True, exist_ok=True)
+
     # Plot Attitude
     fig, (ax0, ax1, ax2) = plt.subplots(3, 1)
     ax = [ax0, ax1, ax2]
@@ -226,7 +231,10 @@ def sim(filter_args, data):
     ax0.set_title("Attitude: Roll")
     ax1.set_title("Attitude: Pitch")
     ax2.set_title("Attitude: Yaw")
-    plt.show()
+    if args.show:
+        plt.show()
+    else:
+        plt.savefig(respath + '/attitude.png')
 
     # Plot bias
     fig, (ax0, ax1, ax2) = plt.subplots(3, 1)
@@ -238,7 +246,10 @@ def sim(filter_args, data):
     ax0.set_title("Bias: x")
     ax1.set_title("Bias: y")
     ax2.set_title("Bias: z")
-    plt.show()
+    if args.show:
+        plt.show()
+    else:
+        plt.savefig(respath + '/bias.png')
 
     # Plot calibration states
     for j in range(data[0].n_cal):
@@ -251,7 +262,10 @@ def sim(filter_args, data):
         ax0.set_title("Calibration: Roll")
         ax1.set_title("Calibration: Pitch")
         ax2.set_title("Calibration: Yaw")
-        plt.show()
+        if args.show:
+            plt.show()
+        else:
+            plt.savefig(respath + '/calibration.png')
 
 
 if __name__ == '__main__':

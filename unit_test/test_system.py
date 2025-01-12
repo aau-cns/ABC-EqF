@@ -51,30 +51,29 @@ class TestSymmetry(unittest.TestCase):
     def testDirection(self):
         self.assertRaises(TypeError, Direction, 5)
         self.assertRaises(TypeError, Direction, np.array([1, 1, 0]).reshape(3, 1))
-        self.assertRaises(TypeError, Direction, np.array([1, 0, 0]))
-        Direction(np.array([1, 0, 0]).reshape(3, 1))
+        Direction(np.array([1, 0, 0]))
 
     def testInput(self):
         self.assertRaises(TypeError, Input, 5, np.eye(3))
         self.assertRaises(TypeError, Input, np.array([1, 0, 0]), np.eye(3))
         self.assertRaises(TypeError, Input, np.array([1, 0, 0]), np.zeros((3, 2)))
-        Input(np.array([1, 1, 1]).reshape(3, 1), np.eye(6))
+        Input(np.array([1, 1, 1]), np.eye(6))
 
     def testState(self):
-        self.assertRaises(TypeError, State, np.eye(3), np.zeros((3, 1)), [1, 2, 3])
+        self.assertRaises(TypeError, State, np.eye(3), np.zeros(3), [1, 2, 3])
         self.assertRaises(TypeError, State, SO3.identity(), [1, 0, 0], [1, 2, 3])
         self.assertRaises(TypeError, State, SO3.identity(), np.zeros((1, 3)), [1, 2, 3])
-        self.assertRaises(TypeError, State, SO3.identity(), np.zeros((3, 1)), [1, 2, 3])
-        self.assertRaises(TypeError, State, SO3.identity(), np.zeros((3, 1)), np.eye(3))
-        State(SO3.identity(), np.zeros((3, 1)), [SO3.identity()])
+        self.assertRaises(TypeError, State, SO3.identity(), np.zeros(3), [1, 2, 3])
+        self.assertRaises(TypeError, State, SO3.identity(), np.zeros(3), np.eye(3))
+        State(SO3.identity(), np.zeros(3), [SO3.identity()])
 
     def testMeasurement(self):
         self.assertRaises(TypeError, Measurement, [1, 0, 0], [1, 0, 0], np.eye(3))
-        self.assertRaises(TypeError, Measurement, np.zeros((1, 3)), np.zeros((3, 1)), np.eye(3))
-        self.assertRaises(TypeError, Measurement, np.zeros((3, 1)), np.zeros((1, 3)), np.eye(3))
-        self.assertRaises(TypeError, Measurement, np.zeros((3, 1)), np.zeros((3, 1)), np.eye(3), -3)
-        self.assertRaises(TypeError, Measurement, np.zeros((3, 1)), np.zeros((3, 1)), np.eye(3), 3.2)
-        Measurement(np.array([1, 0, 0]).reshape(3, 1), np.array([1, 0, 0]).reshape(3, 1), np.eye(3), 1)
+        self.assertRaises(TypeError, Measurement, np.zeros((1, 3)), np.zeros(3), np.eye(3))
+        self.assertRaises(TypeError, Measurement, np.zeros(3), np.zeros((1, 3)), np.eye(3))
+        self.assertRaises(TypeError, Measurement, np.zeros(3), np.zeros(3), np.eye(3), -3)
+        self.assertRaises(TypeError, Measurement, np.zeros(3), np.zeros(3), np.eye(3), 3.2)
+        Measurement(np.array([1, 0, 0]), np.array([1, 0, 0]), np.eye(3), 1)
 
 
 if __name__ == "__main__":

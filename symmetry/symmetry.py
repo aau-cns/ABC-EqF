@@ -100,9 +100,9 @@ class G:
         :return: A random element of the group G
         """
 
-        return G(SO3.exp(np.random.randn(3, 1)),
-                 SO3.wedge(np.random.randn(3, 1)),
-                 [SO3.exp(np.random.randn(3, 1)) for _ in range(n)])
+        return G(SO3.exp(np.random.randn(3)),
+                 SO3.wedge(np.random.randn(3)),
+                 [SO3.exp(np.random.randn(3)) for _ in range(n)])
 
     def inv(self) -> 'G':
         """Return the inverse element of the symmetry group
@@ -119,14 +119,14 @@ class G:
         :return: A element of the group G given by the exponential of x
         """
 
-        if not (isinstance(x, np.ndarray) and x.shape[0] >= 6 and x.shape[1] == 1):
-            raise ValueError("Wrong shape, a numpy array with shape (3n, 1) has to be provided")
+        if not (isinstance(x, np.ndarray) and x.size >= 6):
+            raise ValueError("Wrong shape, a numpy array with size 3n has to be provided")
         if (x.size % 3) != 0:
             raise ValueError("Wrong size, a numpy array with size multiple of 3 has to be provided")
 
         n = int((x.size - 6) / 3)
-        A = SO3.exp(x[0:3, :])
-        a = SO3.wedge(SO3LeftJacobian(x[0:3, :]) @ x[3:6, :])
+        A = SO3.exp(x[0:3])
+        a = SO3.wedge(SO3LeftJacobian(x[0:3]) @ x[3:6])
         B = [SO3.exp(x[(6 + 3 * i):(9 + 3 * i)]) for i in range(n)]
 
         return G(A, a, B)
@@ -142,23 +142,22 @@ class G:
             raise TypeError
 
         n = len(X.B)
-        x = np.zeros(((6 + 3 * n), 1))
-        x[0:3, :] = SO3.log(X.A)
-        x[3:6, :] = np.linalg.inv(SO3LeftJacobian(x[0:3, :])) @ SO3.vee(X.a)
-        x[6:, :] = np.asarray([SO3.log(B) for B in X.B]).reshape((3 * n), 1)
-
+        x = np.zeros(6 + 3 * n)
+        x[0:3] = SO3.log(X.A)
+        x[3:6] = np.linalg.inv(SO3LeftJacobian(x[0:3])) @ SO3.vee(X.a)
+        x[6:] = np.asarray([SO3.log(B) for B in X.B])
         return x
 
 
 def SO3LeftJacobian(arr: np.ndarray) -> np.ndarray:
     """Return the SO(3) Left Jacobian
 
-    :param arr: A numpy array with shape (3, 1)
+    :param arr: A numpy array with size 3
     :return: The left Jacobian of SO(3)
     """
 
-    if not (isinstance(arr, np.ndarray) and arr.shape == (3, 1)):
-        raise ValueError("A numpy array with shape (3, 1) has to be provided")
+    if not (isinstance(arr, np.ndarray) and arr.size == 3):
+        raise ValueError("A numpy array with size 3 has to be provided")
 
     angle = np.linalg.norm(arr)
 
@@ -226,7 +225,7 @@ def local_coords(e: State) -> np.ndarray:
 
     if coordinate == "EXPONENTIAL":
         tmp = [SO3.log(S) for S in e.S]
-        eps = np.vstack((SO3.log(e.R), e.b, np.asarray(tmp).reshape((3 * len(tmp)), 1)))
+        eps = np.concatenate((SO3.log(e.R), e.b, np.asarray(tmp).reshape(3 * len(tmp),)))
     elif coordinate == "NORMAL":
         raise ValueError("Normal coordinate representation is not implemented yet")
         # X = G(e.R, -SO3.wedge(e.R @ e.b), e.S)
@@ -249,7 +248,7 @@ def local_coords_inv(eps: np.ndarray) -> "State":
         e = State(X.A, eps[3:6, :], X.B)
     elif coordinate == "NORMAL":
         raise ValueError("Normal coordinate representation is not implemented yet")
-        # stateAction(X, State(SO3.identity(), np.zeros((3, 1)), [SO3.identity() for _ in range(len(X.B))]))
+        # stateAction(X, State(SO3.identity(), np.zeros(3), [SO3.identity() for _ in range(len(X.B))]))
     else:
         raise ValueError("Invalid coordinate representation")
 
@@ -263,5 +262,5 @@ def stateActionDiff(xi: State) -> np.ndarray:
     :return: (Dtheta) * (Dphi(xi, E) at E = Id)
     """
     coordsAction = lambda U: local_coords(stateAction(G.exp(U), xi))
-    differential = numericalDifferential(coordsAction, np.zeros(((6 + 3 * len(xi.S)), 1)))
+    differential = numericalDifferential(coordsAction, np.zeros(6 + 3 * len(xi.S)))
     return differential

@@ -32,11 +32,11 @@ def lift(xi: State, u: Input) -> np.ndarray:
     """
 
     n = len(xi.S)
-    L = np.zeros(((6 + 3 * n), 1))
-    L[0:3, :] = (u.w - xi.b)
-    L[3:6, :] = -u.W() @ xi.b
+    L = np.zeros(6 + 3 * n)
+    L[0:3] = (u.w - xi.b)
+    L[3:6] = -u.W() @ xi.b
     for i in range(n):
-        L[(6 + 3 * i):(9 + 3 * i), :] = xi.S[i].inv().as_matrix() @ L[0:3, :]
+        L[(6 + 3 * i):(9 + 3 * i)] = xi.S[i].inv().as_matrix() @ L[0:3]
 
     return L
 
@@ -110,7 +110,7 @@ class EqF:
         assert (y.cal_idx <= self.__n_cal)
 
         Ct = self.__measurementMatrixC(y.d, y.cal_idx)                              # Equation 14b
-        delta = SO3.wedge(d.d) @ outputAction(self.__X_hat.inv(), y.y, y.cal_idx)
+        delta = SO3.wedge(y.d.d) @ outputAction(self.__X_hat.inv(), y.y, y.cal_idx)
         Dt = self.__outputMatrixDt(y.cal_idx)
         S = Ct @ self.__Sigma @ Ct.T + Dt @ y.Sigma @ Dt.T                          # Equation 21
         K = self.__Sigma @ Ct.T @ np.linalg.inv(S)                                  # Equation 22

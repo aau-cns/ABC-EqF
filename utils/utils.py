@@ -26,9 +26,9 @@ def numericalDifferential(f, x) -> np.ndarray:
     m = x.shape[0]
     Df = np.zeros((n, m))
     for j in range(m):
-        ej = np.zeros((m, 1))
-        ej[j, 0] = 1.0
-        Df[:, j:j+1] = (f(x + h * ej) - f(x - h * ej)) / (2*h)
+        ej = np.zeros(m)
+        ej[j] = 1.0
+        Df[:, j:j+1] = (f(x + h * ej) - f(x - h * ej)).reshape(m, 1) / (2*h)
     return Df
 
 
